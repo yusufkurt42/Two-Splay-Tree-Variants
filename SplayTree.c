@@ -9,21 +9,22 @@ struct node{
 typedef struct node Node;
 
 Node *root;
+int TOTALCOST;
 
 FILE *fileRead;
-// *fileWrite; in case we need
 
 Node* rightRotation(Node* x){
     Node *y = x->left;
     x->left = y->right;
     y->right = x;
-
+    TOTALCOST++;
     return y;
 }
 Node* leftRotation(Node *x){
     Node* y = x->right;
     x->right = y->left;
     y->left = x;
+    TOTALCOST++;
     return y;
 }
 
@@ -33,18 +34,23 @@ Node* splayIt(Node *root,int key){
 
     // Key lies in the left subTree
     if(key < root->data){
+        TOTALCOST++;
         if(root->left == NULL)
             return root; // then key is not in here
 
         if(key < root->left->data){ // LEFT-LEFT
+            TOTALCOST++;
             root->left->left = splayIt(root->left->left,key);
             root = rightRotation(root); // after everything has done, we rotate
+            TOTALCOST++;
         }
 
         else if(key > root->left->data){ //LEFT-RIGHT
+            TOTALCOST++;
             root->left->right = splayIt(root->left->right,key);
             if(root->left->right) // Not NULL
                 root->left = leftRotation(root->left);
+                
         }
 
         return root->left ? rightRotation(root) : root; // root left is null then return the root
@@ -55,11 +61,14 @@ Node* splayIt(Node *root,int key){
 
         // RIGHT-RIGHT
         if(key > root->right->data){
+            TOTALCOST++;
             root->right->right = splayIt(root->right->right,key);
             root = leftRotation(root);
+            TOTALCOST++;
         }
         // RIGHT-LEFT
         else if(key < root->right->data){
+            TOTALCOST++;
             root->right->left = splayIt(root->right->left,key);
             if(root->right->left) // not null
                 root->right = rightRotation(root->right);
@@ -69,31 +78,37 @@ Node* splayIt(Node *root,int key){
     }
 }
 
-
-void add(Node *ptr,Node *newPtr){
-    if(ptr!=NULL){
-        if(newPtr->data < ptr->data){
-           if(ptr->left == NULL) ptr->left=newPtr;
-           else add(ptr->left,newPtr); 
-        }
-        else{
-           if(ptr->right == NULL) ptr->right=newPtr;
-           else add(ptr->right,newPtr);
-        }
-    }
+Node* CreateANode(int data){
+    Node *ptr = malloc(sizeof(Node));
+    if(ptr==NULL) perror("Problem in allocation");
+    ptr->data = data;
+        
+    ptr->left = NULL, ptr->right = NULL;
+    return ptr;
 }
 
 Node* insert(Node *root,int data){
     // if no root then make one
-    Node *ptr = malloc(sizeof(Node)), *temp;
-    if(ptr==NULL) perror("Problem in allocation");
-    ptr->data = data;
-    ptr->left = NULL, ptr->right = NULL;
+    // here we should first find the key, if exists no need to create a node.
+    if(root == NULL){
+        root = CreateANode(data);
+    }
 
-    if(root == NULL) root = ptr; // if there is no root
-
-    else add(root,ptr); // after the root solve it by recursion
-
+    else{
+        if(root->data >= data){
+            TOTALCOST++;
+            if(root->data == data){
+                return root;
+            }
+            if(root->left == NULL) root->left = CreateANode(data);
+            else insert(root->left,data); 
+        }
+        else{
+            TOTALCOST++;
+            if(root->right == NULL) root->right = CreateANode(data);
+            else insert(root->right,data);
+        }
+    }
     return root;
 }
 
@@ -121,22 +136,17 @@ void freeTree(Node *ptr){
 
 int main(){
     fileRead = fopen("input.txt", "r");
-    // fileWrite = fopen("output.txt", "w");
-    // || fileWrite == NULL
     if (fileRead == NULL) {
         printf("Error opening file.\n");
         return 1; /* Exit with error */
     }
     puts("Bismillah\nSplay Tree");
-    // now lets make a menu:
+
     int input; //&input cause we need pointer, remember.
-    while(fscanf(fileRead, "%d", &input)==1){
-        // puts("Yeap");
-        root = insertAndSplay(root,input);
-    }
+    while(fscanf(fileRead, "%d,", &input)==1) root = insertAndSplay(root,input);
+    
     traverse(root);
-    printf("\nAnd the root is: %d",root->data);
+    // printf("\nAnd the root is: %d",root->data);
+    printf("\nTotal Cost is: %d",TOTALCOST);
     return 0;
 }
-
-// Alhamdulillah, now we have a splay tree.
