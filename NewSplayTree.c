@@ -42,7 +42,6 @@ Node* splayIt(Node *root,int key){
             TOTALCOST++;
             root->left->left = splayIt(root->left->left,key);
             root = rightRotation(root); // after everything has done, we rotate
-            TOTALCOST++;
         }
 
         else if(key > root->left->data){ //LEFT-RIGHT
@@ -64,7 +63,6 @@ Node* splayIt(Node *root,int key){
             TOTALCOST++;
             root->right->right = splayIt(root->right->right,key);
             root = leftRotation(root);
-            TOTALCOST++;
         }
         // RIGHT-LEFT
         else if(key < root->right->data){
