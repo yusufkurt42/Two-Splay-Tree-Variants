@@ -1,0 +1,15 @@
+In Splay Tree we first insert a node, if it doesn't already exist, then splay it to the root. 
+However, if already exists then we just move it to the root. And the total cost is calculated
+accoridingly.
+
+
+
+
+
+
+
+
+
+
+
+// Muhammad Jafar Rahimjonzoda 150122925
