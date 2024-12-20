@@ -1,15 +1,6 @@
 In Splay Tree we first insert a node, if it doesn't already exist, then splay it to the root. 
 However, if already exists then we just move it to the root. And the total cost is calculated
-accoridingly.
+accordingly.
 
-
-
-
-
-
-
-
-
-
-
-// Muhammad Jafar Rahimjonzoda 150122925
+In modified splay tree we have a data field count that increments when an already present node is searched.
+If a node's count is higher than root's count than the tree gets splayed according to that node.
