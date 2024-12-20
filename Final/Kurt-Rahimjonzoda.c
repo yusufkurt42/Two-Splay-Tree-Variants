@@ -84,29 +84,30 @@ Node* CreateANode(int data){
     return ptr;
 }
 
-Node* insert(Node *root,int data){
-    // if no root then make one
-    // here we should first find the key, if exists no need to create a node.
-    if(root == NULL){
-        root = CreateANode(data);
+Node* insert(Node *node,int data){
+    /*if no root then make one,
+    here we should first find the key, if exists no need to create a node.*/
+    if(node == NULL){
+        node = CreateANode(data);
     }
-
     else{
-        if(root->data >= data){
-            if(root->data == data){
-                TOTALCOST++;
-                return root;
+        if(node->data >= data){
+            TOTALCOST++;
+            if(node->data == data){
+                node->count++;
+                lin=node;
+                return node;
             }
-            if(root->left == NULL) root->left = CreateANode(data);
-            else insert(root->left,data); 
+            if(node->left == NULL) node->left = CreateANode(data);
+            else insert(node->left,data); 
         }
         else{
             TOTALCOST++;
-            if(root->right == NULL) root->right = CreateANode(data);
-            else insert(root->right,data);
+            if(node->right == NULL) node->right = CreateANode(data);
+            else insert(node->right,data);
         }
     }
-    return root;
+    return node;
 }
 
 void preOrder(Node *ptr,FILE* output){
